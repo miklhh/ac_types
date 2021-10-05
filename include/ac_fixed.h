@@ -245,7 +245,7 @@ public:
   static const ac_o_mode o_mode = O;
   static const ac_q_mode q_mode = Q;
   static const int e_width = 0;
-#ifdef __AC_FIXED_NUMERICAL_ANALYSIS_BASE
+#if defined(__AC_FIXED_NUMERICAL_ANALYSIS_BASE) || defined(__OVERFLOW_DB)
   static const bool compute_overflow_for_wrap = true;
 #else
   static const bool compute_overflow_for_wrap = false;
@@ -372,6 +372,13 @@ public:
       if(O==AC_SAT_SYM && S && S2)
         overflow |= neg_src && (W > 1 ? ac_private::iv_equal_zeros_to<W-1,N>(Base::v) : true);
       overflow_adjust(overflow, neg_src);
+#ifdef __OVERFLOW_DB
+      if (overflow) {
+        char str[40 + 4*20 + 2*20];
+        std::sprintf(str, "Overflow in assignment <%d,%d>: %f <-- <%d,%d>: %f", I, W-I, this->to_double(), I2, W2-I2, op.to_double());
+        db::print(str);
+      }
+#endif
 #ifdef __AC_FIXED_NUMERICAL_ANALYSIS_BASE
     __AC_FIXED_NUMERICAL_ANALYSIS_BASE::update(overflow,neg_src,op);
 #endif
