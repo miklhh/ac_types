@@ -376,7 +376,7 @@ public:
       if (overflow) {
         char str[40 + 4*20 + 2*20];
         std::sprintf(str, "Overflow in assignment <%d,%d>: %f <-- <%d,%d>: %f", I, W-I, this->to_double(), I2, W2-I2, op.to_double());
-        db::print(str);
+        __OVERFLOW_DB::print(str);
       }
 #endif
 #ifdef __AC_FIXED_NUMERICAL_ANALYSIS_BASE
